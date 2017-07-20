@@ -377,6 +377,12 @@ urlpatterns = [
 
     es_conv_flag(r'^es/quienes-somos/$', TemplateView.as_view(
                  template_name='es/quienes-somos/index.html')),
+
+    flagged_url('FWB_RELEASE',
+                r'^(?i)consumer-tools/financial-well-being/$',
+                include('wellbeing.urls')
+    ),
+
 ]
 
 if settings.ALLOW_ADMIN_URL:
