@@ -31,14 +31,15 @@ function date( field, currentStatus ) {
 }
 
 /**
- * email Determines if a field contains a email date.
+ * email Determines if a field contains a valid email.
  *
  * @param {Object} field         Field to test.
  * @param {Object} currentStatus A previous tested status for the field.
+ * @param {String} lang          Language code of the message to be returned.
  * @returns {Object} An empty object if the field passes,
  *   otherwise an object with msg and type properties if it failed.
  */
-function email( field, currentStatus ) {
+function email( field, currentStatus, lang = 'EN' ) {
   var status = currentStatus || {};
   var regex =
     '^[a-z0-9\u007F-\uffff!#$%&\'*+\/=?^_`{|}~-]+(?:\\.[a-z0-9' +
@@ -47,7 +48,11 @@ function email( field, currentStatus ) {
   var emailRegex = new RegExp( regex, 'i' );
   if ( field.value && emailRegex.test( field.value ) === false ) {
     status.msg = status.msg || '';
-    status.msg += ERROR_MESSAGES.EMAIL.INVALID;
+    var messageTranslation = 'INVALID';
+    if ( lang !== 'EN' ) {
+      messageTranslation += '_' + lang.toUpper();
+    }
+    status.msg += ERROR_MESSAGES.EMAIL.eval( messageTranslation );
     status.email = false;
   }
   return status;
