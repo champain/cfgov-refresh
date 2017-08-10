@@ -379,7 +379,7 @@ urlpatterns = [
                  template_name='es/quienes-somos/index.html')),
 
     flagged_url('FWB_RELEASE',
-                r'^(?i)consumer-tools/financial-well-being/$',
+                r'^(?i)consumer-tools/financial-well-being/',
                 include('wellbeing.urls')
     ),
 
