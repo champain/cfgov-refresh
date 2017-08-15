@@ -8,7 +8,7 @@
     - vars/db.yml
   roles:
     - { role: vickumar1981.mysql }
-    - { role: geerlingguy.firewall }
+    - { role: geerlingguy.firewall, when: ansible_virtualization_type != 'docker' }
 
 - hosts: app
   sudo: yes
@@ -35,7 +35,7 @@
     - { role: vccabral.elasticsearch }
     - { role: geerlingguy.git }
     - { role: Ken24.python }
-    - { role: geerlingguy.firewall }
+    - { role: geerlingguy.firewall, when: ansible_virtualization_type != 'docker' }
     - { role: smbambling.apache }
     - { role: vickumar1981.nodejs }
   tasks:
@@ -92,14 +92,17 @@
       command: "/usr/local/bin/pip install virtualenv"
 
     - name: Create virtualenv and install requirements
-      pip: requirements=/vagrant/requirements/local.txt virtualenv=/vagrant/cfgov-refresh virtualenv_command=/usr/local/bin/virtualenv
+      pip:
+        requirements: /cfpb_app/requirements/local.txt 
+        virtualenv: /cfpb_app/cfgov-refresh 
+        virtualenv_command: /usr/local/bin/virtualenv
 
     - name: Add environment variables to bashrc
       lineinfile: 
-        dest: /home/vagrant/.bashrc 
+        dest: /etc/profile 
         state: present 
-        regexp: 'source /vagrant/cfgov-refresh/bin/activate' 
-        line: 'source /vagrant/cfgov-refresh/bin/activate; source /vagrant/.env'
+        regexp: 'source /cfpb_app/cfgov-refresh/bin/activate' 
+        line: 'source /cfpb_app/cfgov-refresh/bin/activate; source /vagrant/.env'
 
     - name: Migrate django db to match application state
-      shell: "source /vagrant/.env; /vagrant/cfgov-refresh/bin/python /vagrant/cfgov/manage.py migrate"
+      shell: "source /cfpb_app/.env; /cfpb_app/cfgov-refresh/bin/python /cfpb_app/cfgov/manage.py migrate"
