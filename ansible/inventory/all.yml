@@ -1,0 +1,9 @@
+---
+all:
+  children:
+    db:
+      hosts:
+        localhost:
+    app:
+      hosts:
+        localhost:

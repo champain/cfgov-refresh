@@ -1,0 +1,29 @@
+---
+ansible:
+  playbook: ansible/cfgov_refresh_setup.yml
+  config_file: ansible.cfg
+
+dependency:
+  name: galaxy
+  requirements_file: ansible/requirements.yml
+  options:
+      ignore-certs: True
+      ignore-errors: True
+
+molecule:
+  ignore_paths:
+    - .git
+    - .vagrant
+    - .bundle
+    - .vendor
+    - .venv
+    - .molecule
+    - vendor
+
+docker:
+  containers:
+    - name: centos6
+      image: centos
+      image_version: 6
+      port_bindings:
+        80: 8080
