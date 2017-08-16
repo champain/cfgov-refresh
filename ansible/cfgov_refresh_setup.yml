@@ -87,22 +87,10 @@
     - name: Start PDFReactor service
       command: /opt/PDFreactor/bin/pdfreactorwebservice start 
 
-    # Django Development Setup
-    - name: Install virtualenv
-      command: "/usr/local/bin/pip install virtualenv"
-
-    - name: Create virtualenv and install requirements
+    - name: Install requirements
       pip:
         requirements: /cfpb_app/requirements/local.txt 
-        virtualenv: /cfpb_app/cfgov-refresh 
-        virtualenv_command: /usr/local/bin/virtualenv
-
-    - name: Add environment variables to bashrc
-      lineinfile: 
-        dest: /etc/profile 
-        state: present 
-        regexp: 'source /cfpb_app/cfgov-refresh/bin/activate' 
-        line: 'source /cfpb_app/cfgov-refresh/bin/activate; source /vagrant/.env'
+        executable: pip2.7
 
     - name: Migrate django db to match application state
-      shell: "source /cfpb_app/.env; /cfpb_app/cfgov-refresh/bin/python /cfpb_app/cfgov/manage.py migrate"
+      command: python2.7 /cfpb_app/cfgov/manage.py migrate
